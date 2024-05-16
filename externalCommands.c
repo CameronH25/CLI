@@ -6,28 +6,28 @@
 #include "externalCommands.h"
 
 bool executeExternalCommand(const char* command) {
-    pid_t pid; // Ref 1 
-    int status; // Ref 2 
+    pid_t pid; 
+    int status; 
 
-    pid = fork(); // Ref 3 
+    pid = fork(); 
     if (pid == 0) {
         // Child process
-        execlp("sh", "sh", "-c", command, (char *)NULL); // Ref 4 
-        perror("execlp"); // execlp only returns on error. Ref 5
-        exit(EXIT_FAILURE); // Ref 6 
+        execlp("sh", "sh", "-c", command, (char *)NULL);
+        perror("execlp"); // execlp only returns on error. 
+        exit(EXIT_FAILURE);
 
     } else if (pid < 0) {
         // Error forking
-        perror("fork"); // Ref 7
+        perror("fork");
         return false;
 
     } else {
         // Parent process
-        if (waitpid(pid, &status, 0) == -1) { // Ref 8
-            perror("waitpid"); // Ref 9
+        if (waitpid(pid, &status, 0) == -1) { 
+            perror("waitpid"); 
             return false;
         }
 
-        return WIFEXITED(status); // Ref 10
+        return WIFEXITED(status); 
     }
 }
